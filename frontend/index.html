@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ganimedes - Monitoreo JupyterLite</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Form -->
+        <div id="auth-container" class="container">
+            <div class="auth-card">
+                <h1>Ganimedes</h1>
+                <p class="subtitle">Sistema de Proctorización</p>
+                
+                <div id="login-form">
+                    <h2>Iniciar Sesión</h2>
+                    <form id="signin-form">
+                        <input type="email" id="signin-email" placeholder="Email" required>
+                        <input type="password" id="signin-password" placeholder="Contraseña" required>
+                        <button type="submit">Entrar</button>
+                    </form>
+                    <p class="toggle-auth">
+                        ¿No tienes cuenta? <a href="#" id="show-signup">Regístrate</a>
+                    </p>
+                </div>
+
+                <div id="signup-form" style="display: none;">
+                    <h2>Registrarse</h2>
+                    <form id="register-form">
+                        <input type="text" id="signup-name" placeholder="Nombre completo">
+                        <input type="email" id="signup-email" placeholder="Email" required>
+                        <input type="password" id="signup-password" placeholder="Contraseña" required>
+                        <button type="submit">Registrar</button>
+                    </form>
+                    <p class="toggle-auth">
+                        ¿Ya tienes cuenta? <a href="#" id="show-signin">Inicia sesión</a>
+                    </p>
+                </div>
+                
+                <div id="error-message" class="error"></div>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="main-container" style="display: none;">
+            <header>
+                <h1>Ganimedes - Sesión Activa</h1>
+                <div class="user-info">
+                    <span id="user-email"></span>
+                    <button id="logout-btn">Cerrar Sesión</button>
+                </div>
+            </header>
+
+            <div class="dashboard">
+                <div class="stats-panel">
+                    <h2>Estadísticas de Sesión</h2>
+                    <div class="stat-item">
+                        <span class="stat-label">Tiempo de Foco:</span>
+                        <span id="focus-time" class="stat-value">0:00:00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Eventos de Pegado:</span>
+                        <span id="paste-count" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Estado:</span>
+                        <span id="session-status" class="stat-value status-active">Activo</span>
+                    </div>
+                </div>
+
+                <div class="jupyter-container">
+                    <h2>JupyterLite (Simulación)</h2>
+                    <div class="code-editor">
+                        <textarea id="code-area" placeholder="Escribe o pega código aquí para probar el monitoreo..."></textarea>
+                    </div>
+                </div>
+
+                <div class="events-log">
+                    <h2>Registro de Eventos</h2>
+                    <div id="events-list" class="events-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/static/monitor.js"></script>
+</body>
+</html>
