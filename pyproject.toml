@@ -1,0 +1,24 @@
+[project]
+name = "ganimedes"
+version = "0.1.0"
+description = "Sistema de monitoreo y proctorización para instancias JupyterLite"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "supabase>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.5.0",
+    "python-jose[cryptography]>=3.3.0",
+    "python-multipart>=0.0.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
