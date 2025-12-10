@@ -1,0 +1,47 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.11', '3.12']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+        if: runner.os != 'Windows'
+        
+      - name: Install uv (Windows)
+        run: |
+          irm https://astral.sh/uv/install.ps1 | iex
+        if: runner.os == 'Windows'
+        shell: pwsh
+        
+      - name: Install dependencies
+        run: |
+          uv sync --extra dev
+          
+      - name: Run tests
+        run: |
+          uv run pytest -v
+        env:
+          SUPABASE_URL: https://fake-url.supabase.co
+          SUPABASE_KEY: fake-key-for-testing
+          SECRET_KEY: test-secret-key
