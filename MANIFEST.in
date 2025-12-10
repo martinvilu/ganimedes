@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+include SETUP.md
+include JUPYTERLITE_INTEGRATION.md
+include .env.example
+include supabase-schema.sql
+recursive-include frontend *.html *.js *.css
+recursive-include scripts *.sh
+recursive-include ganimedes *.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

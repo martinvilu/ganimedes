@@ -1,9 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ganimedes"
 version = "0.1.0"
 description = "Sistema de monitoreo y proctorización para instancias JupyterLite"
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Ganimedes Contributors"}
+]
+keywords = ["jupyterlite", "proctoring", "monitoring", "education", "supabase"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Framework :: FastAPI",
+]
 dependencies = [
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
@@ -22,3 +41,20 @@ dev = [
     "black>=23.0.0",
     "ruff>=0.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/usuario/ganimedes"
+Documentation = "https://github.com/usuario/ganimedes/blob/main/README.md"
+Repository = "https://github.com/usuario/ganimedes"
+"Bug Tracker" = "https://github.com/usuario/ganimedes/issues"
+
+[project.scripts]
+ganimedes = "ganimedes.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ganimedes*"]
+exclude = ["tests*", "docs*"]
+
+[tool.setuptools.package-data]
+ganimedes = ["py.typed"]

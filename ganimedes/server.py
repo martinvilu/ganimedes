@@ -190,7 +190,8 @@ async def health_check():
     }
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the CLI."""
     import uvicorn
     
     host = os.getenv("HOST", "0.0.0.0")
@@ -202,3 +203,7 @@ if __name__ == "__main__":
         port=port,
         reload=True
     )
+
+
+if __name__ == "__main__":
+    main()
