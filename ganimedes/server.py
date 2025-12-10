@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from dotenv import load_dotenv
 
-from .auth import get_current_user, sign_up, sign_in, SUPABASE_CONFIGURED
+from .auth import get_current_user, sign_up, sign_in, SUPABASE_CONFIGURED, MOCK_MODE
 from .database import MonitorEvent, FocusSession
 from .monitor import monitoring_service
 
@@ -24,7 +24,8 @@ app = FastAPI(
 
 # Estado de la aplicación
 APP_STATUS = {
-    "supabase_configured": SUPABASE_CONFIGURED
+    "supabase_configured": SUPABASE_CONFIGURED,
+    "mock_mode": MOCK_MODE
 }
 
 # Configurar CORS
@@ -190,20 +191,40 @@ async def get_session_stats(
 @app.get("/api/health")
 async def health_check():
     """Health check endpoint."""
+    if MOCK_MODE:
+        status_msg = "🧪 Modo MOCK - autenticación en memoria para testing"
+        status = "testing"
+    elif SUPABASE_CONFIGURED:
+        status_msg = "OK - Supabase configurado"
+        status = "healthy"
+    else:
+        status_msg = "⚠️ Supabase no configurado - endpoints de autenticación no disponibles"
+        status = "degraded"
+    
     return {
-        "status": "healthy" if SUPABASE_CONFIGURED else "degraded",
+        "status": status,
         "supabase_configured": SUPABASE_CONFIGURED,
+        "mock_mode": MOCK_MODE,
         "timestamp": datetime.utcnow().isoformat(),
-        "message": "OK" if SUPABASE_CONFIGURED else "⚠️ Supabase no configurado - endpoints de autenticación no disponibles"
+        "message": status_msg
     }
 
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Página de inicio con información del estado."""
-    status_icon = "✅" if SUPABASE_CONFIGURED else "⚠️"
-    status_text = "Configurado correctamente" if SUPABASE_CONFIGURED else "No configurado"
-    status_color = "green" if SUPABASE_CONFIGURED else "orange"
+    if MOCK_MODE:
+        status_icon = "🧪"
+        status_text = "Modo MOCK (Testing)"
+        status_color = "blue"
+    elif SUPABASE_CONFIGURED:
+        status_icon = "✅"
+        status_text = "Configurado correctamente"
+        status_color = "green"
+    else:
+        status_icon = "⚠️"
+        status_text = "No configurado"
+        status_color = "orange"
     
     html_content = f"""
     <!DOCTYPE html>
@@ -278,7 +299,7 @@ async def root():
                 <strong>{status_icon} Estado de Supabase:</strong> {status_text}
             </div>
             
-            {'<div class="warning"><strong>⚠️ Configuración Requerida</strong><br>Para usar Ganimedes, configura las siguientes variables de entorno en tu archivo <code>.env</code>:<br><br><code>SUPABASE_URL=https://tu-proyecto.supabase.co</code><br><code>SUPABASE_KEY=tu-clave-anon</code><br><br>Luego reinicia el servidor.</div>' if not SUPABASE_CONFIGURED else ''}
+            {'<div class="warning" style="background: #e3f2fd; border-color: blue;"><strong>🧪 Modo MOCK Activado</strong><br>El servidor está usando autenticación simulada en memoria para testing. Los datos no persisten.<br><br>Para usar Supabase real, configura en <code>.env</code>:<br><code>SUPABASE_URL=...</code><br><code>SUPABASE_KEY=...</code><br>y elimina <code>MOCK_AUTH=true</code></div>' if MOCK_MODE else '<div class="warning"><strong>⚠️ Configuración Requerida</strong><br>Para usar Ganimedes, configura en <code>.env</code>:<br><br><code>SUPABASE_URL=https://tu-proyecto.supabase.co</code><br><code>SUPABASE_KEY=tu-clave-anon</code><br><br>O usa modo MOCK para testing:<br><code>MOCK_AUTH=true</code><br><br>Luego reinicia el servidor.</div>' if not SUPABASE_CONFIGURED else ''}
             
             <h2>Recursos</h2>
             <div class="links">
