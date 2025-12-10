@@ -60,6 +60,8 @@ Abre `http://localhost:8000/static/index.html` en tu navegador.
 
 ## Desarrollo
 
+### Con uv
+
 ```bash
 # Activar entorno virtual
 source .venv/bin/activate  # Linux/Mac
@@ -71,6 +73,62 @@ uv run python -m ganimedes.server
 
 # Ejecutar tests
 ./scripts/test.sh
+```
+
+### Con Conda
+
+```bash
+# Crear ambiente de desarrollo
+conda env create -f environment-dev.yml
+conda activate ganimedes-dev
+
+# Ejecutar servidor
+ganimedes
+# O
+python -m ganimedes.server
+```
+
+## Construcción de Paquete Conda
+
+Ver [CONDA_BUILD.md](CONDA_BUILD.md) para instrucciones detalladas.
+
+```bash
+# Construir paquete .conda
+./scripts/build-conda.sh
+
+# Probar paquete
+./scripts/test-conda-package.sh
+
+# Subir a Anaconda.org
+./scripts/upload-conda.sh
+```
+
+### Con Conda
+
+```bash
+# Crear ambiente de desarrollo
+conda env create -f environment-dev.yml
+conda activate ganimedes-dev
+
+# Ejecutar servidor
+ganimedes
+# O
+python -m ganimedes.server
+```
+
+## Construcción de Paquete Conda
+
+Ver [CONDA_BUILD.md](CONDA_BUILD.md) para instrucciones detalladas.
+
+```bash
+# Construir paquete .conda
+./scripts/build-conda.sh
+
+# Probar paquete
+./scripts/test-conda-package.sh
+
+# Subir a Anaconda.org
+./scripts/upload-conda.sh
 ```
 
 ## Estructura del Proyecto
