@@ -23,7 +23,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ```bash
 # Clonar repositorio
-git clone <repository-url>
+git clone https://github.com/martinvilu/ganimedes.git
 cd ganimedes
 
 # Instalar dependencias
@@ -244,8 +244,8 @@ MIT License - ver [LICENSE](LICENSE) para más detalles.
 
 ## Contacto
 
-- Repositorio: [GitHub](https://github.com/usuario/ganimedes)
-- Issues: [GitHub Issues](https://github.com/usuario/ganimedes/issues)
+- Repositorio: [GitHub](https://github.com/martinvilu/ganimedes)
+- Issues: [GitHub Issues](https://github.com/martinvilu/ganimedes/issues)
 
 ## Agradecimientos
 

@@ -183,9 +183,9 @@ El proyecto sigue:
 
 ## 📞 Soporte
 
-- **GitHub Issues**: Para bugs y features
-- **Discussions**: Para preguntas generales
-- **Email**: Configurar en el proyecto
+- **GitHub Issues**: https://github.com/martinvilu/ganimedes/issues
+- **Discussions**: https://github.com/martinvilu/ganimedes/discussions
+- **Repositorio**: https://github.com/martinvilu/ganimedes
 
 ## 🎉 Estado Actual
 

@@ -77,12 +77,12 @@ anaconda upload ./dist/conda/noarch/ganimedes-*.conda
 
 Tu paquete estará disponible en:
 ```
-https://anaconda.org/TU-USUARIO/ganimedes
+https://anaconda.org/martinvilu/ganimedes
 ```
 
 Los usuarios pueden instalarlo con:
 ```bash
-conda install -c TU-USUARIO ganimedes
+conda install -c martinvilu ganimedes
 ```
 
 ## Estructura de Archivos Conda
@@ -176,19 +176,19 @@ Una vez publicado, los usuarios pueden instalar de varias formas:
 
 ### Instalación Simple
 ```bash
-conda install -c TU-USUARIO ganimedes
+conda install -c martinvilu ganimedes
 ```
 
 ### Con Ambiente Nuevo
 ```bash
-conda create -n mi-ganimedes python=3.11 -c TU-USUARIO ganimedes
+conda create -n mi-ganimedes python=3.11 -c martinvilu ganimedes
 conda activate mi-ganimedes
 ```
 
 ### Desde environment.yml
 ```bash
 # Los usuarios clonan el repo
-git clone https://github.com/usuario/ganimedes.git
+git clone https://github.com/martinvilu/ganimedes.git
 cd ganimedes
 
 # Crean el ambiente
@@ -218,5 +218,5 @@ python -c "import ganimedes; print(ganimedes.__version__)"
 
 ## Soporte
 
-- **Issues:** https://github.com/usuario/ganimedes/issues
-- **Discusiones:** https://github.com/usuario/ganimedes/discussions
+- **Issues:** https://github.com/martinvilu/ganimedes/issues
+- **Discusiones:** https://github.com/martinvilu/ganimedes/discussions

@@ -43,10 +43,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/usuario/ganimedes"
-Documentation = "https://github.com/usuario/ganimedes/blob/main/README.md"
-Repository = "https://github.com/usuario/ganimedes"
-"Bug Tracker" = "https://github.com/usuario/ganimedes/issues"
+Homepage = "https://github.com/martinvilu/ganimedes"
+Documentation = "https://github.com/martinvilu/ganimedes/blob/main/README.md"
+Repository = "https://github.com/martinvilu/ganimedes"
+"Bug Tracker" = "https://github.com/martinvilu/ganimedes/issues"
 
 [project.scripts]
 ganimedes = "ganimedes.server:main"

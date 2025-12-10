@@ -283,5 +283,5 @@ tar -xjf ganimedes-0.1.0-py_0.conda
 ## Soporte
 
 Para problemas con el paquete conda:
-- Issues: https://github.com/usuario/ganimedes/issues
+- Issues: https://github.com/martinvilu/ganimedes/issues
 - Conda-forge: https://github.com/conda-forge/staged-recipes

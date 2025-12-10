@@ -44,7 +44,7 @@ test:
     - pip
 
 about:
-  home: https://github.com/usuario/ganimedes
+  home: https://github.com/martinvilu/ganimedes
   license: MIT
   license_family: MIT
   license_file: LICENSE
@@ -54,9 +54,9 @@ about:
     para instancias JupyterLite. Incluye autenticación con Supabase, detección
     de eventos de pegado, seguimiento de tiempo de foco, y un sistema completo
     de gestión de sesiones para proctorización de exámenes.
-  doc_url: https://github.com/usuario/ganimedes/blob/main/README.md
-  dev_url: https://github.com/usuario/ganimedes
+  doc_url: https://github.com/martinvilu/ganimedes/blob/main/README.md
+  dev_url: https://github.com/martinvilu/ganimedes
 
 extra:
   recipe-maintainers:
-    - tu-usuario-github
+    - martinvilu

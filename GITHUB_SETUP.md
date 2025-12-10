@@ -30,10 +30,10 @@ git push -u origin main
 cd /home/mrtin/dev/jupyter/ganimedes
 
 # Agregar el remote
-git remote add origin https://github.com/TU-USUARIO/ganimedes.git
+git remote add origin https://github.com/martinvilu/ganimedes.git
 
 # O si usas SSH
-git remote add origin git@github.com:TU-USUARIO/ganimedes.git
+git remote add origin git@github.com:martinvilu/ganimedes.git
 
 # Push del código
 git push -u origin main
