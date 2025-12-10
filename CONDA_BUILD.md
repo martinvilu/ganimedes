@@ -16,16 +16,21 @@ conda install conda-build anaconda-client
 ```bash
 cd /home/mrtin/dev/jupyter/ganimedes
 
-# Construir el paquete conda
-conda build conda-recipe
+# Usar el script (recomendado - evita problemas de permisos)
+./scripts/build-conda.sh
 
-# O especificar el directorio de salida
-conda build conda-recipe --output-folder ./dist/conda
+# O manual con directorio local de build
+conda build conda-recipe \
+    --output-folder ./dist/conda \
+    --croot ./build/conda-bld \
+    --no-anaconda-upload
 ```
 
 El paquete `.conda` se generará en:
-- Linux: `~/anaconda3/conda-bld/noarch/ganimedes-0.1.0-py_0.conda`
-- O en `./dist/conda/noarch/ganimedes-0.1.0-py_0.conda` si especificaste output-folder
+- `./dist/conda/noarch/ganimedes-0.1.0-py_0.conda`
+
+**Importante**: Usamos `--croot ./build/conda-bld` para construir en un directorio
+local y evitar problemas de permisos en directorios del sistema.
 
 ### Paso 2: Instalar localmente (para probar)
 
@@ -229,6 +234,22 @@ conda env create -f environment.yml
 
 ## Troubleshooting
 
+### Error: "Permission denied" en /usr/pkgs
+
+Este es el error más común. Ocurre cuando conda-build intenta escribir en directorios del sistema.
+
+**Solución**: Usar directorio local de build
+```bash
+# Con el script (ya incluye la solución)
+./scripts/build-conda.sh
+
+# O manualmente
+conda build conda-recipe \
+    --output-folder ./dist/conda \
+    --croot ./build/conda-bld \
+    --no-anaconda-upload
+```
+
 ### Error: "Package already exists"
 
 ```bash
@@ -259,7 +280,7 @@ Si un paquete solo está en PyPI, puedes:
 
 ```bash
 # Listar contenido del paquete
-conda inspect contents ~/anaconda3/conda-bld/noarch/ganimedes-0.1.0-py_0.conda
+conda inspect contents ./dist/conda/noarch/ganimedes-0.1.0-py_0.conda
 
 # O extraer el paquete
 tar -xjf ganimedes-0.1.0-py_0.conda

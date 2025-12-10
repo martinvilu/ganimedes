@@ -36,11 +36,17 @@ conda install -n base conda-build anaconda-client -y
 cd /home/mrtin/dev/jupyter/ganimedes
 ./scripts/build-conda.sh
 
-# Opción B: Manual
-conda build conda-recipe --output-folder ./dist/conda
+# Opción B: Manual (usando directorio local)
+conda build conda-recipe \
+    --output-folder ./dist/conda \
+    --croot ./build/conda-bld \
+    --no-anaconda-upload
 ```
 
 El paquete se creará en: `./dist/conda/noarch/ganimedes-0.1.0-py_0.conda`
+
+**Nota**: El script usa `--croot ./build/conda-bld` para construir en un directorio
+local y evitar problemas de permisos en directorios del sistema como `/usr/pkgs`.
 
 ### 3. Probar el Paquete Localmente
 
@@ -139,6 +145,19 @@ Para publicar una nueva versión:
    ```
 
 ## Troubleshooting Común
+
+### Error: "Permission denied" en /usr/pkgs
+Este es el error más común al construir.
+
+**Solución**: El script `build-conda.sh` ya incluye la solución usando `--croot`
+```bash
+./scripts/build-conda.sh
+```
+
+Si construyes manualmente, usa:
+```bash
+conda build conda-recipe --croot ./build/conda-bld --output-folder ./dist/conda
+```
 
 ### Error: "conda-build no encontrado"
 ```bash

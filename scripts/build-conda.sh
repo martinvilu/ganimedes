@@ -12,12 +12,17 @@ if ! command -v conda-build &> /dev/null; then
     exit 1
 fi
 
-# Crear directorio de salida
+# Crear directorios de trabajo
 mkdir -p dist/conda
+mkdir -p build/conda-bld
 
-# Construir el paquete
+# Construir el paquete usando directorio local para build
 echo "📦 Construyendo paquete..."
-conda build conda-recipe --output-folder ./dist/conda
+echo "   (usando directorio local de build para evitar permisos)"
+conda build conda-recipe \
+    --output-folder ./dist/conda \
+    --croot ./build/conda-bld \
+    --no-anaconda-upload
 
 echo ""
 echo "✅ Paquete construido exitosamente!"
