@@ -4,12 +4,13 @@ import os
 from datetime import datetime
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from dotenv import load_dotenv
 
-from .auth import get_current_user, sign_up, sign_in
+from .auth import get_current_user, sign_up, sign_in, SUPABASE_CONFIGURED
 from .database import MonitorEvent, FocusSession
 from .monitor import monitoring_service
 
@@ -20,6 +21,11 @@ app = FastAPI(
     description="Sistema de monitoreo y proctorización para JupyterLite",
     version="0.1.0"
 )
+
+# Estado de la aplicación
+APP_STATUS = {
+    "supabase_configured": SUPABASE_CONFIGURED
+}
 
 # Configurar CORS
 app.add_middleware(
@@ -185,9 +191,122 @@ async def get_session_stats(
 async def health_check():
     """Health check endpoint."""
     return {
-        "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat()
+        "status": "healthy" if SUPABASE_CONFIGURED else "degraded",
+        "supabase_configured": SUPABASE_CONFIGURED,
+        "timestamp": datetime.utcnow().isoformat(),
+        "message": "OK" if SUPABASE_CONFIGURED else "⚠️ Supabase no configurado - endpoints de autenticación no disponibles"
     }
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Página de inicio con información del estado."""
+    status_icon = "✅" if SUPABASE_CONFIGURED else "⚠️"
+    status_text = "Configurado correctamente" if SUPABASE_CONFIGURED else "No configurado"
+    status_color = "green" if SUPABASE_CONFIGURED else "orange"
+    
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Ganimedes - Sistema de Monitoreo</title>
+        <style>
+            body {{
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+                background: #f5f5f5;
+            }}
+            .container {{
+                background: white;
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }}
+            h1 {{
+                color: #2563eb;
+                margin-bottom: 10px;
+            }}
+            .status {{
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+                background: #fff3cd;
+                border-left: 4px solid {status_color};
+            }}
+            .status.ok {{
+                background: #d4edda;
+                border-color: green;
+            }}
+            .links {{
+                margin-top: 30px;
+            }}
+            .links a {{
+                display: inline-block;
+                margin: 10px 10px 10px 0;
+                padding: 10px 20px;
+                background: #2563eb;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+            }}
+            .links a:hover {{
+                background: #1e40af;
+            }}
+            code {{
+                background: #f0f0f0;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-family: 'Courier New', monospace;
+            }}
+            .warning {{
+                background: #fff3cd;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+                border-left: 4px solid orange;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🛰️ Ganimedes</h1>
+            <p>Sistema de Monitoreo y Proctorización para JupyterLite</p>
+            
+            <div class="status {'ok' if SUPABASE_CONFIGURED else ''}">
+                <strong>{status_icon} Estado de Supabase:</strong> {status_text}
+            </div>
+            
+            {'<div class="warning"><strong>⚠️ Configuración Requerida</strong><br>Para usar Ganimedes, configura las siguientes variables de entorno en tu archivo <code>.env</code>:<br><br><code>SUPABASE_URL=https://tu-proyecto.supabase.co</code><br><code>SUPABASE_KEY=tu-clave-anon</code><br><br>Luego reinicia el servidor.</div>' if not SUPABASE_CONFIGURED else ''}
+            
+            <h2>Recursos</h2>
+            <div class="links">
+                <a href="/docs">📚 Documentación API</a>
+                <a href="/static/index.html">🎯 Dashboard</a>
+                <a href="/api/health">❤️ Health Check</a>
+                <a href="https://github.com/martinvilu/ganimedes">💻 GitHub</a>
+            </div>
+            
+            <h2>Endpoints Disponibles</h2>
+            <ul>
+                <li><code>GET /api/health</code> - Estado del servidor</li>
+                <li><code>POST /api/auth/signup</code> - Registro de usuario {'❌' if not SUPABASE_CONFIGURED else '✅'}</li>
+                <li><code>POST /api/auth/signin</code> - Inicio de sesión {'❌' if not SUPABASE_CONFIGURED else '✅'}</li>
+                <li><code>POST /api/monitor/event</code> - Registrar evento {'❌' if not SUPABASE_CONFIGURED else '✅'}</li>
+            </ul>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 14px;">
+                Versión 0.1.0 | 
+                <a href="https://github.com/martinvilu/ganimedes" style="color: #2563eb;">GitHub</a> |
+                <a href="/docs" style="color: #2563eb;">API Docs</a>
+            </p>
+        </div>
+    </body>
+    </html>
+    """
+    return html_content
 
 
 def main():

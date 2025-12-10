@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import List, Optional
 from .database import MonitorEvent, FocusSession
-from .auth import supabase
+from .auth import supabase, SUPABASE_CONFIGURED
 
 
 class MonitoringService:
@@ -11,6 +11,12 @@ class MonitoringService:
     
     def __init__(self):
         self.supabase = supabase
+        self.configured = SUPABASE_CONFIGURED
+    
+    def _check_configured(self):
+        """Verifica si Supabase está configurado."""
+        if not self.configured or self.supabase is None:
+            raise Exception("Supabase no está configurado. Los servicios de monitoreo no están disponibles.")
     
     async def record_event(self, event: MonitorEvent) -> dict:
         """
@@ -22,6 +28,7 @@ class MonitoringService:
         Returns:
             dict: Evento registrado con ID
         """
+        self._check_configured()
         try:
             response = self.supabase.table('monitor_events').insert({
                 'user_id': event.user_id,
@@ -55,6 +62,7 @@ class MonitoringService:
         Returns:
             List[dict]: Lista de eventos
         """
+        self._check_configured()
         try:
             query = self.supabase.table('monitor_events').select('*').eq('user_id', user_id)
             
@@ -71,6 +79,7 @@ class MonitoringService:
     
     async def create_focus_session(self, session: FocusSession) -> dict:
         """Crea una nueva sesión de foco."""
+        self._check_configured()
         try:
             response = self.supabase.table('focus_sessions').insert({
                 'user_id': session.user_id,
@@ -94,6 +103,7 @@ class MonitoringService:
         paste_count: int
     ) -> dict:
         """Actualiza una sesión de foco existente."""
+        self._check_configured()
         try:
             response = self.supabase.table('focus_sessions').update({
                 'end_time': end_time.isoformat(),
@@ -107,6 +117,7 @@ class MonitoringService:
     
     async def get_session_stats(self, user_id: str, session_id: str) -> dict:
         """Obtiene estadísticas de una sesión."""
+        self._check_configured()
         try:
             # Obtener sesión de foco
             session_response = self.supabase.table('focus_sessions').select('*').eq(

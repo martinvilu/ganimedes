@@ -1,10 +1,10 @@
 """Autenticación con Supabase."""
 
 import os
+import warnings
 from typing import Optional
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from supabase import create_client, Client
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,15 +13,33 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("SUPABASE_URL y SUPABASE_KEY deben estar configurados")
+# Cliente de Supabase (se inicializa solo si está configurado)
+supabase: Optional[object] = None
+SUPABASE_CONFIGURED = False
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-security = HTTPBearer()
+try:
+    if SUPABASE_URL and SUPABASE_KEY and SUPABASE_URL != "https://fake-url.supabase.co":
+        from supabase import create_client, Client
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        SUPABASE_CONFIGURED = True
+    else:
+        warnings.warn(
+            "⚠️  Supabase no está configurado. Los endpoints de autenticación no funcionarán. "
+            "Configura SUPABASE_URL y SUPABASE_KEY en .env",
+            UserWarning
+        )
+except Exception as e:
+    warnings.warn(
+        f"⚠️  Error al conectar con Supabase: {e}. "
+        "Los endpoints de autenticación no funcionarán.",
+        UserWarning
+    )
+
+security = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Security(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security)
 ) -> dict:
     """
     Valida el token JWT y retorna el usuario actual.
@@ -33,8 +51,21 @@ async def get_current_user(
         dict: Datos del usuario autenticado
         
     Raises:
-        HTTPException: Si el token es inválido
+        HTTPException: Si el token es inválido o Supabase no está configurado
     """
+    if not SUPABASE_CONFIGURED or supabase is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Servicio de autenticación no disponible. Supabase no está configurado.",
+        )
+    
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales de autenticación requeridas",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     token = credentials.credentials
     
     try:
@@ -49,6 +80,8 @@ async def get_current_user(
             )
         
         return user.user
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -59,6 +92,12 @@ async def get_current_user(
 
 def sign_up(email: str, password: str, full_name: Optional[str] = None) -> dict:
     """Registra un nuevo usuario."""
+    if not SUPABASE_CONFIGURED or supabase is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Servicio de autenticación no disponible. Supabase no está configurado.",
+        )
+    
     try:
         response = supabase.auth.sign_up({
             "email": email,
@@ -77,6 +116,12 @@ def sign_up(email: str, password: str, full_name: Optional[str] = None) -> dict:
 
 def sign_in(email: str, password: str) -> dict:
     """Inicia sesión de usuario."""
+    if not SUPABASE_CONFIGURED or supabase is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Servicio de autenticación no disponible. Supabase no está configurado.",
+        )
+    
     try:
         response = supabase.auth.sign_in_with_password({
             "email": email,
