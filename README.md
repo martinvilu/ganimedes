@@ -88,40 +88,31 @@ ganimedes
 python -m ganimedes.server
 ```
 
-## Construcción de Paquete Conda
+## Construcción de Paquetes
+
+### Paquete Wheel (Recomendado)
+
+```bash
+# Construir paquete wheel (.whl) y tarball (.tar.gz)
+./scripts/build-wheel.sh
+
+# Los paquetes se generan en dist/
+# - ganimedes-0.1.0-py3-none-any.whl
+# - ganimedes-0.1.0.tar.gz
+
+# Instalar localmente
+pip install dist/ganimedes-0.1.0-py3-none-any.whl
+```
+
+### Paquete Conda (Experimental)
 
 Ver [CONDA_BUILD.md](CONDA_BUILD.md) para instrucciones detalladas.
 
-```bash
-# Construir paquete .conda
-./scripts/build-conda.sh
-
-# Probar paquete
-./scripts/test-conda-package.sh
-
-# Subir a Anaconda.org
-./scripts/upload-conda.sh
-```
-
-### Con Conda
+**Nota**: Actualmente hay problemas con conda-build en sistemas con conda 
+instalado como paquete del sistema. Se recomienda usar el paquete wheel.
 
 ```bash
-# Crear ambiente de desarrollo
-conda env create -f environment-dev.yml
-conda activate ganimedes-dev
-
-# Ejecutar servidor
-ganimedes
-# O
-python -m ganimedes.server
-```
-
-## Construcción de Paquete Conda
-
-Ver [CONDA_BUILD.md](CONDA_BUILD.md) para instrucciones detalladas.
-
-```bash
-# Construir paquete .conda
+# Construir paquete .conda (puede fallar en algunas configuraciones)
 ./scripts/build-conda.sh
 
 # Probar paquete

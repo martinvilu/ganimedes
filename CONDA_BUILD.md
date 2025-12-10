@@ -2,6 +2,17 @@
 
 Esta guía explica cómo construir y distribuir Ganimedes como un paquete Conda.
 
+> **⚠️ Nota Importante**: Actualmente hay problemas con conda-build en sistemas con
+> conda instalado como paquete del sistema. La construcción de paquetes conda falla
+> debido a conflictos de rutas entre el conda del sistema y conda de usuario.
+>
+> **Solución alternativa recomendada**: Usa el script `build-wheel.sh` para construir
+> un paquete wheel de Python que puede ser instalado con pip en cualquier entorno conda:
+> ```bash
+> ./scripts/build-wheel.sh
+> # Luego instalar con: pip install dist/ganimedes-*.whl
+> ```
+
 ## Requisitos Previos
 
 ```bash
@@ -9,7 +20,7 @@ Esta guía explica cómo construir y distribuir Ganimedes como un paquete Conda.
 conda install conda-build anaconda-client
 ```
 
-## Opción 1: Construcción Local del Paquete .conda
+## Opción 1: Construcción Local del Paquete .conda (EXPERIMENTAL)
 
 ### Paso 1: Construir el paquete
 
