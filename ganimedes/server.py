@@ -76,22 +76,40 @@ class UpdateSessionRequest(BaseModel):
 async def signup(request: SignUpRequest):
     """Registra un nuevo usuario."""
     response = sign_up(request.email, request.password, request.full_name)
-    return {
-        "message": "Usuario registrado exitosamente",
-        "user": response.user,
-        "session": response.session
-    }
+    
+    # Manejar tanto respuestas de Supabase (objeto) como Mock (dict)
+    if isinstance(response, dict):
+        return {
+            "message": "Usuario registrado exitosamente",
+            "user": response.get("user"),
+            "session": response.get("session")
+        }
+    else:
+        return {
+            "message": "Usuario registrado exitosamente",
+            "user": response.user,
+            "session": response.session
+        }
 
 
 @app.post("/api/auth/signin")
 async def signin(request: SignInRequest):
     """Inicia sesión de usuario."""
     response = sign_in(request.email, request.password)
-    return {
-        "message": "Sesión iniciada exitosamente",
-        "user": response.user,
-        "session": response.session
-    }
+    
+    # Manejar tanto respuestas de Supabase (objeto) como Mock (dict)
+    if isinstance(response, dict):
+        return {
+            "message": "Sesión iniciada exitosamente",
+            "user": response.get("user"),
+            "session": response.get("session")
+        }
+    else:
+        return {
+            "message": "Sesión iniciada exitosamente",
+            "user": response.user,
+            "session": response.session
+        }
 
 
 @app.get("/api/auth/me")
