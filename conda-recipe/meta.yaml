@@ -1,0 +1,62 @@
+{% set name = "ganimedes" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  entry_points:
+    - ganimedes = ganimedes.server:main
+
+requirements:
+  host:
+    - python >=3.11
+    - pip
+    - setuptools
+  run:
+    - python >=3.11
+    - fastapi >=0.104.0
+    - uvicorn >=0.24.0
+    - supabase >=2.0.0
+    - python-dotenv >=1.0.0
+    - pydantic >=2.5.0
+    - python-jose >=3.3.0
+    - cryptography
+    - python-multipart >=0.0.6
+
+test:
+  imports:
+    - ganimedes
+    - ganimedes.server
+    - ganimedes.auth
+    - ganimedes.monitor
+    - ganimedes.database
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/usuario/ganimedes
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Sistema de monitoreo y proctorización para instancias JupyterLite
+  description: |
+    Ganimedes es un sistema completo de monitoreo y proctorización diseñado
+    para instancias JupyterLite. Incluye autenticación con Supabase, detección
+    de eventos de pegado, seguimiento de tiempo de foco, y un sistema completo
+    de gestión de sesiones para proctorización de exámenes.
+  doc_url: https://github.com/usuario/ganimedes/blob/main/README.md
+  dev_url: https://github.com/usuario/ganimedes
+
+extra:
+  recipe-maintainers:
+    - tu-usuario-github
