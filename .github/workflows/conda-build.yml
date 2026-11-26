@@ -12,7 +12,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
@@ -63,7 +63,7 @@ jobs:
           fi
           
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: conda-package
           path: dist/conda/**/*.conda
